@@ -2,6 +2,7 @@
 class LineItem implements JsonSerializable
 {
     public $id;
+    public $price;
         
 	    public function jsonserialize()
 	        {
@@ -9,6 +10,7 @@ class LineItem implements JsonSerializable
 			            'item' => [
 				                    'id' => $this->id
 						          ]
+						'price' => $this->price
 						];   
 			}
 }
