@@ -10,7 +10,7 @@ class LineItem implements JsonSerializable
 			            'item' => [
 				                    'id' => $this->id
 						          ]
-						//'price' => $this->price
+						
 						];   
 			}
 }
