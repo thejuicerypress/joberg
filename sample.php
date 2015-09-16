@@ -14,7 +14,7 @@ $newOrder = createOrder($order);
 //create a line items
 $lineItem = new LineItem();
 $lineItem->id = 'XE9JWHPXBAQR8';
-$lineItem->price = '9';
+//$lineItem->price = '9';
 
 //add line item to order
 addItemToOrder($newOrder, $lineItem);
