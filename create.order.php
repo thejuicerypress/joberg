@@ -1,41 +1,8 @@
 <?php
 
-require 'order.php';
-require 'lineItem.php';
-
-/**
- *
- * Generic REST POST endpoint
- *
- * @param   string  URL for the post endpoint
- *          string  json formatted string for the POST request
- * @return  array of POST response
- *
- */
-function postREST($url, $jsonPost)
-{
-    require 'service.interface.php';
-    $curl = curl_init($url);
-    $curl_header = [
-        'Content-Type: application/json',
-        'Accept: application/json',
-        'Authorization: Bearer '.$authKey
-    ];
-    
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $curl_header);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonPost);
-    
-    $curl_response = curl_exec($curl);
-    curl_close($curl);
-
-    $response = json_decode($curl_response, true);
-    
-    //print_r($response);
-    
-    return $response;
-}
+require_once 'order.php';
+//require_once 'lineItem.php';
+require_once 'rest.php';
 
 /**
  *
@@ -54,7 +21,7 @@ function createOrder($orderRequest)
     $json = json_encode($orderRequest);
     //echo $json."<br/><br/>";
     
-    return postRest($serviceAPIUrl, $json);
+    return restPOST($serviceAPIUrl, $json);
 }
 
 /**
@@ -74,7 +41,7 @@ function addItemToOrder($order, $newLineItem)
     $json = json_encode($newLineItem);
     //echo $json."<br/><br/>";
     
-    $response = postRest($serviceAPIUrl, $json);
+    $response = restPOST($serviceAPIUrl, $newLineItem);
     //print_r($response);
     
     return $response;
@@ -93,7 +60,7 @@ function openOrder($order)
     $serviceAPIUrl = $order['href'];
     $json = '{"state": "open"}';
     
-    $response = postRest($serviceAPIUrl, $json);
+    $response = restPOST($serviceAPIUrl, $json);
     //print_r($response);
     
     return $response;
