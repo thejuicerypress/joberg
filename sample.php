@@ -10,21 +10,22 @@ $order->title = 'order title';
 $order->taxRemoved = false;
 $order->orderTypeId = 'AKK5DXMJCBPSW';
 
-$newOrder = createOrder($order);
-
+$newOrderJson = createOrder($order);
+$newOrder = json_decode($newOrderJson, true);
+$newOrderId = $newOrder['id'];
 //create a line items
 // $lineItem = new LineItem();
 // $lineItem->id = 'XE9JWHPXBAQR8';
 
-$item = getItem('XE9JWHPXBAQR8');
-
-var_dump($item);
+$item = 'XE9JWHPXBAQR8';
+$item2 = 'PV8DGZRJ2H3ZT';
 
 //add line item to order
-addItemToOrder($newOrder, $item);
+$response = addItemToOrder($newOrderId, $item);
+$response = addItemToOrder($newOrderId, $item2);
 
 //open order
-$orderStatus = openOrder($newOrder);
+$orderStatus = checkoutOrder($newOrderId);
 
 echo '<br/><br/>';
 var_dump($orderStatus);

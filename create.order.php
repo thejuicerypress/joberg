@@ -3,6 +3,8 @@
 require_once 'order.php';
 //require_once 'lineItem.php';
 require_once 'rest.php';
+require_once 'inventory.php';
+require_once 'line.item.php';
 
 /**
  *
@@ -13,12 +15,12 @@ require_once 'rest.php';
  * @return  array of POST response
  *
  */
-function createOrder($orderRequest)
+function createOrder($orderRequestObject)
 {
     require 'service.interface.php';
     $serviceAPIUrl = $serviceUrl.'/orders';
 
-    $json = json_encode($orderRequest);
+    $json = json_encode($orderRequestObject);
     //echo $json."<br/><br/>";
     
     return restPOST($serviceAPIUrl, $json);
@@ -34,15 +36,15 @@ function createOrder($orderRequest)
  * @return  array of POST response
  *
  */
-function addItemToOrder($order, $newLineItem)
+function addItemToOrder($orderId, $newLineItemId)
 {
-    $serviceAPIUrl = $order['href'].'/line_items';
-    
-    $json = json_encode($newLineItem);
-    //echo $json."<br/><br/>";
-    
-    $response = restPOST($serviceAPIUrl, $newLineItem);
-    //print_r($response);
+    require 'service.interface.php';
+    $serviceAPIUrl = $serviceUrl.'/orders/'.$orderId.'/line_items';
+    // $itemJson = getItem($newLineItemId);
+    // $lineItem = new LineItem($itemJson);
+    // $lineItemJson = json_encode($lineItem);
+    $lineItemJson = '{"item": {"id": "'.$newLineItemId.'"}}';
+    $response = restPOST($serviceAPIUrl, $lineItemJson);
     
     return $response;
 }
@@ -55,13 +57,24 @@ function addItemToOrder($order, $newLineItem)
  * @return  array of POST response
  *
  */
-function openOrder($order)
+function openOrder($orderId)
 {
-    $serviceAPIUrl = $order['href'];
-    $json = '{"state": "open"}';
+    require 'service.interface.php';
+    $serviceAPIUrl = $serviceUrl.'/orders/'.$orderId;
+    // $total = 500;
+
+    $lineItemsUrl = $serviceAPIUrl.'/line_items';
+    $lineItemsJson = restGET($lineItemsUrl);
+    $lineItemsObject = json_decode($lineItemsJson, true);
+
+    $total = 0;
+    foreach ($lineItemsObject['elements'] as $key => $value) {
+        $total = $total + $value['price'];
+    }
+
+    $json = '{"total": "'.$total.'","state": "open"}';
     
     $response = restPOST($serviceAPIUrl, $json);
-    //print_r($response);
     
     return $response;
 }

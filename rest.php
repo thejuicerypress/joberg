@@ -27,11 +27,11 @@ function restPOST($url, $jsonPost)
     $curl_response = curl_exec($curl);
     curl_close($curl);
 
-    $response = json_decode($curl_response, true);
+    // $response = json_decode($curl_response, true);
     
     //print_r($response);
     
-    return $response;
+    return $curl_response;
 }
 
 /**
@@ -60,11 +60,11 @@ function restGET($url)
 
     curl_close($curl);
 
-    $response = json_decode($curl_response, true);
+    // $response = json_decode($curl_response, true);
     
     // print_r($response);
     
-    return $response;
+    return $curl_response;
 }
 
 ?>
